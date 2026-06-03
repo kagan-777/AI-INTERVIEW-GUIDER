@@ -1,0 +1,184 @@
+/* Orb Design System & CSS Animations */
+
+.orb-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  transition: all 0.5s ease;
+}
+
+/* State Variable Definitions */
+.orb-wrapper.sleeping {
+  --orb-accent: #8b5cf6;
+  --orb-accent-secondary: #6366f1;
+  --orb-shadow: rgba(139, 92, 246, 0.3);
+  --orb-animation: pulseGlow 4s infinite ease-in-out;
+}
+
+.orb-wrapper.speaking {
+  --orb-accent: #a78bfa;
+  --orb-accent-secondary: #db2777;
+  --orb-shadow: rgba(167, 139, 250, 0.45);
+  --orb-animation: pulseGlow 1.5s infinite ease-in-out;
+}
+
+.orb-wrapper.listening {
+  --orb-accent: #06b6d4;
+  --orb-accent-secondary: #10b981;
+  --orb-shadow: rgba(6, 182, 212, 0.45);
+  --orb-animation: pulseCyan 1.2s infinite ease-in-out;
+}
+
+.orb-wrapper.thinking {
+  --orb-accent: #3b82f6;
+  --orb-accent-secondary: #f59e0b;
+  --orb-shadow: rgba(59, 130, 246, 0.4);
+  --orb-animation: pulseGlow 2s infinite linear;
+}
+
+/* Base reflection beneath the orb */
+.orb-reflection {
+  position: absolute;
+  bottom: -15px;
+  width: 100px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, var(--orb-shadow) 0%, transparent 70%);
+  filter: blur(4px);
+  opacity: 0.8;
+  animation: floatShadow 4s infinite ease-in-out;
+}
+
+/* Main Orb Body container */
+.orb-body {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  animation: var(--orb-animation);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Core color glow inside the orb */
+.orb-core {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 45%, 
+    rgba(255, 255, 255, 0.8) 0%, 
+    var(--orb-accent) 40%, 
+    var(--orb-accent-secondary) 80%, 
+    transparent 100%
+  );
+  filter: blur(6px);
+  z-index: 1;
+  opacity: 0.85;
+}
+
+/* Mesh texture details */
+.orb-mesh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 8px 8px;
+  opacity: 0.25;
+  z-index: 2;
+}
+
+/* SVG Overlays - Scanning rings */
+.orb-scanner {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 140px;
+  height: 140px;
+  z-index: 3;
+  pointer-events: none;
+  animation: spinSlow 8s infinite linear;
+}
+
+.orb-wrapper.thinking .orb-scanner {
+  animation: spinSlow 3s infinite linear;
+}
+
+.scanning-arc-1, .scanning-arc-2 {
+  transition: stroke 0.5s ease;
+}
+
+.scanning-arc-1 {
+  stroke-dasharray: 40 80;
+  animation: dashShift 4s infinite linear;
+}
+
+.scanning-arc-2 {
+  stroke-dasharray: 60 60;
+  animation: dashShiftReverse 4s infinite linear;
+}
+
+/* Expandable ripple rings */
+.ripple-ring {
+  position: absolute;
+  border: 1px solid var(--orb-accent);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  transition: border-color 0.5s ease;
+}
+
+.orb-wrapper.speaking .ripple-ring,
+.orb-wrapper.listening .ripple-ring {
+  animation: rippleAnimation 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+.orb-wrapper.speaking .ring-1 { animation-delay: 0s; }
+.orb-wrapper.speaking .ring-2 { animation-delay: 0.6s; }
+.orb-wrapper.speaking .ring-3 { animation-delay: 1.2s; }
+
+.orb-wrapper.listening .ring-1 { animation-delay: 0s; width: 120px; height: 120px; }
+.orb-wrapper.listening .ring-2 { animation-delay: 0.4s; width: 120px; height: 120px; }
+.orb-wrapper.listening .ring-3 { animation-delay: 0.8s; width: 120px; height: 120px; }
+
+/* Keyframe animations */
+@keyframes rippleAnimation {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes dashShift {
+  from { stroke-dashoffset: 240; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes dashShiftReverse {
+  from { stroke-dashoffset: -240; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes floatShadow {
+  0%, 100% { transform: scale(1) translateY(0); opacity: 0.6; }
+  50% { transform: scale(0.85) translateY(2px); opacity: 0.4; }
+}
